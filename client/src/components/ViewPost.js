@@ -1,6 +1,25 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 
 function ViewPost() {
+  // Modal for deleting blog post
+  const deleteModal = () => {
+    Swal.fire({
+      position: 'top',
+      allowOutsideClick: true,
+      title: 'Delete Post?',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(0,123,255)',
+      confirmButtonText: 'Okay',
+      width: 275,
+      padding: '0.7em'
+    }).then(result => {
+      if (result.value) {
+        console.log('Post deleted');
+      }
+    });
+  };
+
   return (
     <div className="container offset-lg-3 mt-3">
       <div className="row"></div>
@@ -9,6 +28,15 @@ function ViewPost() {
         <hr />
         <p>
           <small className="text-muted">Oscar Castro ・ Dec 12, 2019</small>
+          <button
+            className="btn btn-danger btn-sm float-right"
+            onClick={() => deleteModal()}
+          >
+            Delete
+          </button>
+          <button className="btn btn-primary btn-sm float-right mx-2">
+            Edit
+          </button>
         </p>
         <hr />
         <p>

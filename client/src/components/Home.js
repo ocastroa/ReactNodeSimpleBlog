@@ -1,5 +1,6 @@
 import React from 'react';
 import faker from 'faker';
+import { Link } from 'react-router-dom';
 
 function Home() {
   let articlesId = 1;
@@ -32,14 +33,19 @@ function Home() {
           {getAllArticles.map(article => {
             return (
               <div key={article.id} className="card mb-3">
-                <div className="card-body">
-                  <h4 className="card-title">{article.title}</h4>
-                  <p className="card-text">
-                    <small className="text-muted">
-                      <b>{article.author}</b> - {article.createdOn}
-                    </small>
-                  </p>
-                </div>
+                <Link
+                  to={`/articles/${article.id}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <div className="card-body">
+                    <h4 className="card-title">{article.title}</h4>
+                    <p className="card-text">
+                      <small className="text-muted">
+                        <b>{article.author}</b> - {article.createdOn}
+                      </small>
+                    </p>
+                  </div>
+                </Link>
               </div>
             );
           })}
