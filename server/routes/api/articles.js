@@ -8,15 +8,7 @@ const {
   addToDatabase,
   updateDatabase,
   deleteFromDatabase
-} = require('../database/db');
-
-let sortArrayByDate = articles => {
-  const sortByPublishedDate = articles.sort(
-    (a, b) => new Date(b['createdOn']) - new Date(a['createdOn'])
-  );
-
-  return sortByPublishedDate;
-};
+} = require('../../model/db');
 
 // Checks if id exists in db
 router.param('articleId', (req, res, next, id) => {
@@ -29,11 +21,11 @@ router.param('articleId', (req, res, next, id) => {
 });
 
 /*
-    @route   Post api/articles
+    @route   Post api/articles/new
     @desc    Create a new article and save it to DB
     @access  Public
 */
-router.post('/', (req, res) => {
+router.post('/new', (req, res) => {
   const addArticle = addToDatabase(req.body);
   res.status(201).json(addArticle);
 });
@@ -45,8 +37,7 @@ router.post('/', (req, res) => {
 */
 router.get('/', (req, res) => {
   const getArticles = getAllFromDatabase();
-  const sortArray = sortArrayByDate(getArticles);
-  res.json(sortArray);
+  res.json(getArticles);
 });
 
 /*
@@ -60,11 +51,11 @@ router.get('/:articleId', (req, res) => {
 });
 
 /*
-    @route   PUT api/articles/:articleId
+    @route   PUT api/articles/:articleId/edit
     @desc    Update a single article by id.
     @access  Public
 */
-router.put('/:articleId', (req, res) => {
+router.put('/:articleId/edit', (req, res) => {
   const updateArticle = updateDatabase(req.body);
   res.json(updateArticle);
 });

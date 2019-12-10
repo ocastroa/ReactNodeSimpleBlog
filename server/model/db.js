@@ -1,9 +1,7 @@
-//@ts-check
-
 // Seed database initializer
 
 const faker = require('faker');
-let moment = require('moment');
+const moment = require('moment');
 
 let articlesId = 1;
 
@@ -68,6 +66,11 @@ const existsInDb = id => {
   }
 };
 
+// Sort dates in descending order
+let sortArrayByDate = articles => {
+  articles.sort((a, b) => new Date(b['createdOn']) - new Date(a['createdOn']));
+};
+
 const getAllFromDatabase = () => {
   return model.data;
 };
@@ -83,7 +86,9 @@ const addToDatabase = instance => {
     instance.id = model.nextId++;
     instance.createdOn = moment().format('MMM DD, YYYY');
     model.data.push(instance);
-    return model.data[model.data.length - 1];
+    let newPost = model.data[model.data.length - 1];
+    sortArrayByDate(model.data);
+    return newPost;
   }
 };
 
@@ -92,6 +97,7 @@ const updateDatabase = instance => {
     return element.id == instance.id;
   });
   if (model.isValid(instance)) {
+    instance.createdOn = model.data[instanceIndex]['createdOn'];
     model.data[instanceIndex] = instance;
     return model.data[instanceIndex];
   }

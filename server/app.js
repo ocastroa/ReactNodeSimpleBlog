@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-let articlesRouter = require('./routes/articles');
+let articlesRouter = require('./routes/api/articles');
 app.use('/api/articles', articlesRouter);
 
 // catch 404 and forward to error handler
