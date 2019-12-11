@@ -16,15 +16,15 @@ const createArticles = () => {
   let articleJson = {
     id: articlesId++,
     title: faker.lorem.words(),
-    body: faker.lorem.paragraph(),
     author: faker.name.findName(),
+    body: faker.lorem.paragraphs(4),
     createdOn: randDate[Math.floor(Math.random() * randDate.length)]
   };
 
   return articleJson;
 };
 
-const getAllArticles = new Array(3).fill(0).map(createArticles);
+const getAllArticles = new Array(2).fill(0).map(createArticles);
 
 // instance is req.body
 const isValidArticle = instance => {
@@ -66,9 +66,9 @@ const existsInDb = id => {
   }
 };
 
-// Sort dates in descending order
+// Sort using id's in descending order
 let sortArrayByDate = articles => {
-  articles.sort((a, b) => new Date(b['createdOn']) - new Date(a['createdOn']));
+  articles.sort((a, b) => new Date(b['id']) - new Date(a['id']));
 };
 
 const getAllFromDatabase = () => {

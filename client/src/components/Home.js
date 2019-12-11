@@ -1,38 +1,46 @@
-import React from 'react';
-import faker from 'faker';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-function Home() {
-  let articlesId = 1;
+import {
+  getArticlesBegin,
+  getArticlesSuccess,
+  getArticlesFailure
+} from '../store/actions/articles';
+import axios from 'axios';
 
-  const createArticles = () => {
-    const randDate = [
-      'Dec 04, 2019',
-      'Dec 02, 2019',
-      'Dec 05, 2019',
-      'Dec 10, 2019'
-    ];
+const Home = () => {
+  const article = useSelector(state => state.article);
+  const dispatch = useDispatch();
 
-    let articleJson = {
-      id: articlesId++,
-      title: faker.lorem.words(),
-      body: faker.lorem.paragraph(),
-      author: faker.name.findName(),
-      createdOn: randDate[Math.floor(Math.random() * randDate.length)]
-    };
+  useEffect(() => {
+    dispatch(getArticlesBegin());
+    axios
+      .get('http://localhost:8000/api/articles/')
+      .then(res => {
+        return res.data;
+      })
+      .then(articles => {
+        dispatch(getArticlesSuccess(articles));
+      })
+      .catch(err => store.dispatch(getArticlesFailure(err)));
+  }, []);
 
-    return articleJson;
-  };
+  if (article.error) {
+    return <div>Error</div>;
+  }
 
-  const getAllArticles = new Array(3).fill(0).map(createArticles);
+  if (article.loading) {
+    return <div></div>;
+  }
 
   return (
     <div className="container">
       <div className="row pt-4">
         <div className="col-12 col-lg-6 offset-lg-3">
-          {getAllArticles.map(article => {
+          {article.articles.map(article => {
             return (
-              <div key={article.id} className="card mb-3">
+              <div key={article.id} className="card mb-3 ml-3">
                 <Link
                   to={`/articles/${article.id}`}
                   style={{ textDecoration: 'none' }}
@@ -53,6 +61,6 @@ function Home() {
       </div>
     </div>
   );
-}
+};
 
 export default Home;

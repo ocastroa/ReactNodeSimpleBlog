@@ -1,7 +1,18 @@
 import React from 'react';
 import Swal from 'sweetalert2';
+import { withRouter } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteArticleThunk } from '../store/middleware/articleThunks';
 
-function ViewPost() {
+const ViewPost = withRouter(props => {
+  const id = props.match.params.id;
+  const article = useSelector(state => state.article);
+  const dispatch = useDispatch();
+
+  // Get article that matches param id
+  const getArticles = article.articles.filter(article => article['id'] == id);
+  const { title, author, createdOn, body } = getArticles[0]; // Object destructuring
+
   // Modal for deleting blog post
   const deleteModal = () => {
     Swal.fire({
@@ -15,19 +26,22 @@ function ViewPost() {
       padding: '0.7em'
     }).then(result => {
       if (result.value) {
-        console.log('Post deleted');
+        dispatch(deleteArticleThunk(id));
+        props.history.push('/');
       }
     });
   };
 
   return (
-    <div className="container offset-lg-3 mt-3">
+    <div className="offset-lg-3 mt-3">
       <div className="row"></div>
-      <div className="col-lg-8 ml-n3">
-        <h1 className="mt-4 ml-1 mr-1">consequatur ipsum maxime</h1>
+      <div className="col-lg-9">
+        <h1 className="mt-4 ml-1 mr-1">{title}</h1>
         <hr />
         <p>
-          <small className="text-muted">Oscar Castro ・ Dec 12, 2019</small>
+          <small className="text-muted">
+            {author} ・ {createdOn}
+          </small>
           <button
             className="btn btn-danger btn-sm float-right"
             onClick={() => deleteModal()}
@@ -39,27 +53,10 @@ function ViewPost() {
           </button>
         </p>
         <hr />
-        <p>
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature from 45 BC, making
-          it over 2000 years old. Richard McClintock, a Latin professor at
-          Hampden-Sydney College in Virginia, looked up one of the more obscure
-          Latin words, consectetur, from a Lorem Ipsum passage, and going
-          through the cites of the word in classical literature, discovered the
-          undoubtable source. Lorem Ipsum comes from sections 1.10.32 and
-          1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and
-          Evil) by Cicero, written in 45 BC. This book is a treatise on the
-          theory of ethics, very popular during the Renaissance. The first line
-          of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in
-          section 1.10.32. The standard chunk of Lorem Ipsum used since the
-          1500s is reproduced below for those interested. Sections 1.10.32 and
-          1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also
-          reproduced in their exact original form, accompanied by English
-          versions from the 1914 translation by H. Rackham.
-        </p>
+        <p className="mb-5"> {body} </p>
       </div>
     </div>
   );
-}
+});
 
 export default ViewPost;
