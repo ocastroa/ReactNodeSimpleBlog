@@ -2,7 +2,8 @@ import {
   GET_ARTICLES_BEGIN,
   GET_ARTICLES_SUCCESS,
   GET_ARTICLES_FAILURE,
-  POST_ARTICLE
+  POST_ARTICLE,
+  UPDATE_ARTICLE
 } from '../actions/articles';
 
 const initState = {
@@ -38,6 +39,21 @@ export const getArticlesReducer = (state = initState, action) => {
       return {
         ...state,
         articles: [...state.articles, action.payload.article]
+      };
+
+    case UPDATE_ARTICLE:
+      const index = state.articles.findIndex(
+        el => el.id == action.payload.article.id
+      );
+      if (index === -1) {
+        return state;
+      }
+      return {
+        articles: [
+          ...state.articles.slice(0, index),
+          action.payload.article,
+          ...state.articles.slice(index + 1)
+        ]
       };
 
     default:

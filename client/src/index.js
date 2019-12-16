@@ -10,11 +10,10 @@ import thunks from 'redux-thunk';
 
 // Import components
 import App from './components/App';
-import CreatePost from './components/CreatePost';
-import EditPost from './components/EditPost';
 import Home from './components/Home';
 import Navbar from './components/Navbar';
 import ViewPost from './components/ViewPost';
+import Form from './components/Form';
 
 const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -28,9 +27,9 @@ ReactDOM.render(
       <Switch>
         <Route path="/" component={App}>
           <Route exact path="/" component={Home} />
-          <Route exact path="/new" component={CreatePost} />
+          <Route exact path="/new" component={Form} />
           <Route exact path="/articles/:id" component={ViewPost} />
-          <Route exact path="/articles/:id/edit" component={EditPost} />
+          <Route exact path="/articles/:id/edit" component={Form} />
         </Route>
       </Switch>
     </Router>

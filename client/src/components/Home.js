@@ -9,6 +9,13 @@ import {
 } from '../store/actions/articles';
 import axios from 'axios';
 
+/**
+ * TODO:
+ *  2.5) Add redux-persist to persist articles state after page reloads when user is in the View page of an article (currently the articles state gets empty after reload, which causes an error when trying to fetch data from articles state in View page)
+ *  3) Clean up CSS for background
+ *  4) Connect to MongoDb Atlas for DB storage
+ */
+
 const Home = () => {
   const article = useSelector(state => state.article);
   const dispatch = useDispatch();

@@ -39,9 +39,10 @@ export const editArticle = () => {
   };
 };
 
-export const updateArticle = () => {
+export const updateArticle = article => {
   return {
-    type: UPDATE_ARTICLE
+    type: UPDATE_ARTICLE,
+    payload: { article }
   };
 };
 

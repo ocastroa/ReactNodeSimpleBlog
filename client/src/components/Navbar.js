@@ -8,7 +8,18 @@ const Navbar = () => {
         <Link to="/">
           <a className="navbar-brand">DevBlog</a>
         </Link>
-        <Link to="/new">
+        <Link
+          to={{
+            pathname: `/new`,
+            state: {
+              edit: false,
+              setId: '',
+              setTitle: '',
+              setAuthor: '',
+              setBody: ''
+            }
+          }}
+        >
           <button className="btn btn-sm btn-outline-light">Write</button>
         </Link>
       </nav>
