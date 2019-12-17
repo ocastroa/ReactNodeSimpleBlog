@@ -35,11 +35,16 @@ const Form = withRouter(props => {
     setValue({ key: e.target.name, value: e.target.value });
   };
 
+  const cancelEvent = () => {
+    // Go back to previous page
+    props.history.goBack();
+  };
+
   // Use async await to wait for data (in this case the new or updated id of the article) before proceeding to the appropriate page
   const checkInputFields = async () => {
     if (title && author && body) {
       if (edit) {
-        // User is updating an existing post
+        // User is updating an existing article
         let editArticlePromise = new Promise(res => {
           res(dispatch(updateArticleThunk(value)));
         });
@@ -48,7 +53,7 @@ const Form = withRouter(props => {
         let updatedArticleId = await editArticlePromise;
         props.history.push(`/articles/${updatedArticleId}`);
       } else {
-        // User is posting a new post
+        // User is posting a new article
         let addArticlePromise = new Promise(res => {
           res(dispatch(createArticleThunk(value)));
         });
@@ -92,19 +97,28 @@ const Form = withRouter(props => {
             <textarea
               name="body"
               className="form-control my-3"
-              rows="8"
+              rows="7"
               placeholder="Write here..."
               value={body}
               onChange={onChange}
             ></textarea>
           </div>
         </form>
-        <button
-          className="btn btn-primary mb-4 float-right"
-          onClick={() => checkInputFields()}
-        >
-          {edit ? `Update` : `Publish`}
-        </button>
+        <div className="float-right">
+          <button
+            className="btn btn-secondary mb-4"
+            style={{ marginRight: '0.5em' }}
+            onClick={() => cancelEvent()}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary mb-4"
+            onClick={() => checkInputFields()}
+          >
+            {edit ? `Update` : `Publish`}
+          </button>
+        </div>
       </div>
     </div>
   );
