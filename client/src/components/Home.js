@@ -11,9 +11,8 @@ import axios from 'axios';
 
 /**
  * TODO:
- *  1) Add redux-persist to persist articles state after page reloads when user is in the View page of an article (currently the articles state gets empty after reload, which causes an error when trying to fetch data from articles state in View page)
- *  2) Clean up CSS for background
- *  3) Connect to MongoDb Atlas for DB storage
+ *  1) Clean up CSS for background
+ *  2) Connect to MySql db to store blog post table and user table
  */
 
 const Home = () => {
