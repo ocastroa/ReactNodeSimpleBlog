@@ -9,12 +9,6 @@ import {
 } from '../store/actions/articles';
 import axios from 'axios';
 
-/**
- * TODO:
- *  1) Clean up CSS for background
- *  2) Connect to MySql db to store blog post table and user table
- */
-
 const Home = () => {
   const article = useSelector(state => state.article);
   const dispatch = useDispatch();
