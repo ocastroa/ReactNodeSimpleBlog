@@ -18,7 +18,7 @@ const {
  *      - /api/profile/username/articleId => shows a post from that particular user
  *    - api/auth => authenticates users using a JWT token
  *    -
- *  2) set up jwt auth
+ *  2) set up jwt auth middleware and set up path where user signs in
  *  3) test endpoints
  */
 
