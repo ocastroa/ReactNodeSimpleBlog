@@ -1,8 +1,8 @@
-let createError = require('http-errors');
-let express = require('express');
-let app = express();
-let path = require('path');
-let logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const app = express();
+const path = require('path');
+const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
@@ -15,8 +15,11 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-let articlesRouter = require('./routes/api/articles');
-app.use('/api/articles', articlesRouter);
+// API endpoints
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/profile', require('./routes/api/profile'));
+app.use('/api/articles', require('./routes/api/articles'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

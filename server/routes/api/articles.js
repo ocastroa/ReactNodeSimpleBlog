@@ -10,6 +10,18 @@ const {
   deleteFromDatabase
 } = require('../../model/db');
 
+/**
+ * TODO:
+ *  1) add/edit endpoints
+ *    - /api/user => register users
+ *    - /api/profile/username => users profile which shows their first & last name and posts they've written
+ *      - /api/profile/username/articleId => shows a post from that particular user
+ *    - api/auth => authenticates users using a JWT token
+ *    -
+ *  2) set up jwt auth
+ *  3) test endpoints
+ */
+
 // Checks if id exists in db
 router.param('articleId', (req, res, next, id) => {
   let getArticleId = existsInDb(id);

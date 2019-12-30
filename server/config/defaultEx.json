@@ -1,0 +1,12 @@
+{
+  "dbConfigEx": {
+    "host": "localhost",
+    "user": "{insert username here}",
+    "password": "{your password here}",
+    "database": "{Name of database that will be used}",
+    "waitForConnections": true,
+    "connectionLimit": 10,
+    "queueLimit": 0
+  },
+  "jwtToken": "{insert your secret jwt token}"
+}
