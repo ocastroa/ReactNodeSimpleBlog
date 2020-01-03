@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const con = require('../../../server/config/mysqldb');
 const poll = con();
 
@@ -94,10 +96,29 @@ router.post(
             console.log(`Error: ${err}`);
             return res.status(500).send('Server error');
           }
-          res.end();
+          //   res.end();
         }
       );
-      res.end();
+
+      const payload = {
+        // Pass username as payload for jsonwebtoken
+        user: {
+          username: username
+        }
+      };
+
+      // Return jsonwebtoken
+      jwt.sign(
+        payload,
+        config.get('jwtToken'),
+        { expiresIn: 360000 },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
+
+      //   res.end();
     } catch (error) {
       console.error(error.message);
       return res.status(500).send('Server error');

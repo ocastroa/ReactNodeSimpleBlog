@@ -19,6 +19,7 @@ const {
  *    - api/auth => authenticates users using a JWT token
  *    -
  *  2) set up jwt auth middleware and set up path where user signs in
+ *    - jwt will be used to authenticate user in protected route (only in /settings path, everything else is public)
  *  3) test endpoints
  */
 

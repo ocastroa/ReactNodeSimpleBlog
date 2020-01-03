@@ -3,8 +3,39 @@ const { check, validationResult } = require('express-validator');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const auth = require('../middleware/auth');
 const con = require('../../../server/config/mysqldb');
 const poll = con();
+
+/*
+    @route   GET api/auth
+    @desc    Get user info from db after authenticating them, use in protected paths 
+    @access  Public
+*/
+router.get('/', auth, async (req, res) => {
+  const connection = await poll.getConnection();
+  try {
+    // Get user's information from db
+    let queryStr =
+      'SELECT first_name, last_name, username, email FROM Author WHERE username= ?';
+
+    const [getUser] = await connection.execute(queryStr, [req.user.username]);
+
+    const user = {
+      firstName: getUser[0].first_name,
+      lastName: getUser[0].last_name,
+      username: getUser[0].username,
+      email: getUser[0].email
+    };
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).send('Server error');
+  } finally {
+    // Release connection
+    connection.release();
+  }
+});
 
 /*
     @route   Post api/auth
