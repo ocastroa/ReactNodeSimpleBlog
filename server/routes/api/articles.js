@@ -1,6 +1,6 @@
 let express = require('express');
 let router = express.Router();
-
+//
 const {
   getAllFromDatabase,
   existsInDb,
@@ -8,7 +8,7 @@ const {
   addToDatabase,
   updateDatabase,
   deleteFromDatabase
-} = require('../../model/db');
+} = require('../../model/temp_db');
 
 /**
  * TODO:

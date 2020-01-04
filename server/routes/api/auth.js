@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const auth = require('../middleware/auth');
+const { checkUser, getUserInfo, getPassword } = require('../../model/db');
 const con = require('../../../server/config/mysqldb');
 const poll = con();
 
@@ -16,20 +17,11 @@ router.get('/', auth, async (req, res) => {
   const connection = await poll.getConnection();
   try {
     // Get user's information from db
-    let queryStr =
-      'SELECT first_name, last_name, username, email FROM Author WHERE username= ?';
-
-    const [getUser] = await connection.execute(queryStr, [req.user.username]);
-
-    const user = {
-      firstName: getUser[0].first_name,
-      lastName: getUser[0].last_name,
-      username: getUser[0].username,
-      email: getUser[0].email
-    };
+    const user = await getUserInfo(connection, req.user.username);
 
     res.json(user);
   } catch (error) {
+    console.error(error.message);
     res.status(500).send('Server error');
   } finally {
     // Release connection
@@ -65,28 +57,20 @@ router.post(
       const { email, password } = req.body;
 
       // Check if user exists in db by checking email.
-      let queryStr =
-        'SELECT COUNT(1) AS isUserFound FROM Author WHERE email= ?';
-
-      const [findUser] = await connection.execute(queryStr, [email]);
+      const doesUserExist = await checkUser(connection, email);
 
       // user does not exist, return status 400
-      if (findUser[0].isUserFound == 0) {
+      if (doesUserExist == 0) {
         return res
           .status(400)
           .json({ errors: [{ msg: 'Invalid credentials.' }] });
       }
 
       // Check that password matches
-      queryStr = 'SELECT password FROM Author WHERE email= ?';
-
-      const [getPassword] = await connection.execute(queryStr, [email]);
+      const encryptedPassword = await getPassword(connection, email);
 
       // compare password with encrypted password
-      const doesPwdMatch = await bcrypt.compare(
-        password,
-        getPassword[0].password
-      );
+      const doesPwdMatch = await bcrypt.compare(password, encryptedPassword);
 
       // Password does not match
       if (!doesPwdMatch) {

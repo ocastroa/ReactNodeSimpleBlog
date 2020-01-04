@@ -5,6 +5,7 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const { checkUser, checkUsername, addUser } = require('../../model/db');
 const con = require('../../../server/config/mysqldb');
 const poll = con();
 
@@ -47,27 +48,21 @@ router.post(
     try {
       const { first_name, last_name, username, email, password } = req.body;
 
-      // Check if user exists in db by checking email. Use Prepared Statements
-      let queryStr =
-        'SELECT COUNT(1) AS isUserFound FROM Author WHERE email= ?';
-
-      const [findUser] = await connection.execute(queryStr, [email]);
+      // Check if user exists in db by checking email
+      const doesUserExist = await checkUser(connection, email);
 
       // user exists, return status 400
-      if (findUser[0].isUserFound == 1) {
+      if (doesUserExist == 1) {
         return res
           .status(400)
           .json({ errors: [{ msg: 'User already registered.' }] });
       }
 
       // Check if username is available to use by checking db
-      queryStr =
-        'SELECT COUNT(1) AS isUsernameFound FROM Author WHERE username= ?';
-
-      const [findUsername] = await connection.execute(queryStr, [username]);
+      const doesUsernameExist = await checkUsername(connection, username);
 
       // username exists, return status 400
-      if (findUsername[0].isUsernameFound == 1) {
+      if (doesUsernameExist == 1) {
         return res.status(400).json({
           errors: [{ msg: 'Username already exists. Choose another username.' }]
         });
@@ -85,20 +80,16 @@ router.post(
       const encryptPassword = await bcrypt.hash(password, salt);
 
       // Insert new user into db
-      queryStr =
-        'INSERT INTO Author SET first_name = ?, last_name = ?, username = ?,                                    email = ?, password = ?, avatar = ?';
+      const userInfo = {
+        first_name: first_name,
+        last_name: last_name,
+        username: username,
+        email: email,
+        encryptPassword: encryptPassword,
+        avatar: avatar
+      };
 
-      await connection.execute(
-        queryStr,
-        [first_name, last_name, username, email, encryptPassword, avatar],
-        err => {
-          if (err) {
-            console.log(`Error: ${err}`);
-            return res.status(500).send('Server error');
-          }
-          //   res.end();
-        }
-      );
+      await addUser(connection, userInfo);
 
       const payload = {
         // Pass username as payload for jsonwebtoken
@@ -117,8 +108,6 @@ router.post(
           res.json({ token });
         }
       );
-
-      //   res.end();
     } catch (error) {
       console.error(error.message);
       return res.status(500).send('Server error');
